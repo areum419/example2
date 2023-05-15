@@ -6,12 +6,39 @@ import productModel from "../models/product.js";
 const router = express.Router();
 
 // CRUD 생성
-router.get("/", (req,res) => {
+router.get("/", async (req,res) => {
+
+    const products = await productModel.find();
+
     res.json({
-        msg : "product get all"
+        msg : "product get all",
+        count: products.length,
+        products: products.map(item => {
+            return {
+                id: item._id,
+                title: item.title,
+                price: item.price
+            }
+        })
     })
 })
 
+// 상세 조회
+router.get("/:productId", async (req,res) => {
+
+    const product = await productModel.findById(req.params.productId);
+
+    if(!product){
+        res.json({
+            msg: "no product"
+        })
+    }else{
+        res.json({
+            msg: `successful get ${req.params.productId}$`,
+            product: product
+        })
+    }
+})
 router.post("/", async(req,res) => {
    // const userInput = {
    //     name : req.body.produtName,
@@ -30,18 +57,18 @@ router.post("/", async(req,res) => {
     const newProduct = await userInput.save();
 
     res.json({
-        msg : "create ____ product",
+        msg : "create >  product",
         product : newProduct
     })
 })
 
-router.put("/update", (req,res) => {
+router.put("/", (req,res) => {
     res.json({
         msg : "update & product"
     })
 })
 
-router.delete("/delete", (req, res) => {
+router.delete("/", (req, res) => {
     res.json({
         msg : "delete & product"
     })
