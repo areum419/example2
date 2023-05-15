@@ -68,11 +68,22 @@ router.put("/", (req,res) => {
     })
 })
 
-router.delete("/", (req, res) => {
+// 전체삭제
+router.delete("/", async (req, res) => {
+
+    await productModel.deleteMany()
+
     res.json({
         msg : "delete & product"
     })
 })
 
+//단건 삭제
+router.delete("/:productId", async(req,res) => {
+    await productModel.findByIdAndDelete(req.params.productId)
 
+    res.json({
+        msg: `delete & product at ${req.params.productId}$`
+    })
+})
 export default router;
