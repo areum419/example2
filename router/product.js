@@ -26,7 +26,9 @@ router.get("/", async (req,res) => {
 // 상세 조회
 router.get("/:productId", async (req,res) => {
 
-    const product = await productModel.findById(req.params.productId);
+ //   const product = await productModel.findById(req.params.productId);
+    const {productId} = req.params
+    const product = await productModel.findById(productId);
 
     if(!product){
         res.json({
@@ -34,8 +36,10 @@ router.get("/:productId", async (req,res) => {
         })
     }else{
         res.json({
-            msg: `successful get ${req.params.productId}$`,
-            product: product
+            // msg: `successful get ${req.params.productId}$`,
+            // product: product
+            msg: `successful get ${productId}$`,
+            product
         })
     }
 })
@@ -45,13 +49,10 @@ router.post("/", async(req,res) => {
    //     price : req.body.productPrice
    // }
 
+    const {titme, price, description, brand, company, stock} = req.body;
+
     const userInput = new productModel({
-        title: req.body.productTitle,
-        price: req.body.productPrice,
-        description: req.body.productDescription,
-        brand: req.body.productBrnad,
-        company: req.body.productCompany,
-        stock: req.body.productStock
+        title, price, description,  brand, company, stock
     })
 
     const newProduct = await userInput.save();
@@ -65,15 +66,20 @@ router.post("/", async(req,res) => {
 // 수정
 router.put("/:productId", async (req,res) => {
 
-    const product = await productModel.findById(req.params.productId);
+//    const product = await productModel.findById(req.params.productId);
+
+    const {title, price, description, brand, company, stock} = req.body;
+
+    const {productId} = req.params
+    const product = await productModel.findById(productId);
 
     if(product) {
-        product.title = req.body.productTitle ? req.body.productTitle : product.title
-        product.price = req.body.productPrice ? req.body.productPrice : product.price
-        product.description = req.body.productDesc ? req.body.productDesc : product.description
-        product.brand = req.body.productBrand ? req.body.productBrand : product.brand
-        product.company = req.body.productCompany ? req.body.productCompany : product.company
-        product.stock = req.body.productStock ? req.body.productStock : product.stock
+        product.title = title ? title : product.title
+        product.price = price ? price : product.price
+        product.description = description ? description : product.description
+        product.brand = brand ? brand : product.brand
+        product.company = company ? company : product.company
+        product.stock = stock ? stock : product.stock
     }
 
     const updateProduct = await product.save(); // db commit 역활
@@ -96,10 +102,12 @@ router.delete("/", async (req, res) => {
 
 //단건 삭제
 router.delete("/:productId", async(req,res) => {
-    await productModel.findByIdAndDelete(req.params.productId)
+    //await productModel.findByIdAndDelete(req.params.productId)
+    const product = await productModel.findById(productId)
+    await productModel.findByIdAndDelete(productId)
 
     res.json({
-        msg: `delete & product at ${req.params.productId}$`
+        msg: `delete & product at ${productId}$`
     })
 })
 export default router;
