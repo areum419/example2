@@ -12,6 +12,8 @@ dotenv.config();
 
 import productRoute from "./router/product.js"; // produect.js 만든다음에 여기에 import 꼭 생성
 
+import orderRoute from "./router/order.js";
+
 
 const app = express();
 
@@ -24,6 +26,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended : false}))
 
 app.use("/product", productRoute); // post 맨 product 경로
+app.use("/order", orderRoute);
 
 //const port = 8080;
 const port = process.env.PORT || 9090
